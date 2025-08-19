@@ -6,7 +6,7 @@ describe('fillTank', () => {
     fillTank,
   } = require('./fillTank.js');
 
-  it('should not return anthing ', () => {
+  it('should not return anything ', () => {
     const customer = {
       money: 3000,
       vehicle: {
@@ -42,6 +42,7 @@ describe('fillTank', () => {
 
     fillTank(customer, 10, 1);
     expect(customer.money).toBe(3000);
+    expect(customer.vehicle.fuelRemains).toBe(8);
   });
 
   it('should round purchased fuel price to the nearest hundredth part', () => {
@@ -81,6 +82,7 @@ describe('fillTank', () => {
 
     fillTank(customer, 10, 12);
     expect(customer.money).toBe(0);
+    expect(customer.vehicle.fuelRemains).toBe(18);
   });
 
   it('should tank only what will fit if the amount is greater than tank can accomodate', () => {
@@ -94,5 +96,20 @@ describe('fillTank', () => {
 
     fillTank(customer, 10, 10);
     expect(customer.money).toBe(950);
+    expect(customer.vehicle.fuelRemains).toBe(40);
+  });
+
+  it('should fuel as much as customer can afford when full tank is requested', () => {
+    const customer = {
+      money: 100,
+      vehicle: {
+        maxTankCapacity: 40,
+        fuelRemains: 10,
+      },
+    };
+
+    fillTank(customer, 10);
+    expect(customer.money).toBe(0);
+    expect(customer.vehicle.fuelRemains).toBe(20);
   });
 });
