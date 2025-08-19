@@ -29,6 +29,7 @@ describe('fillTank', () => {
 
     fillTank(customer, 10);
     expect(customer.vehicle.fuelRemains).toBe(40);
+    expect(customer.money).toBe(2680);
   });
 
   it('should not tank if amount is lower than two', () => {
@@ -56,6 +57,7 @@ describe('fillTank', () => {
 
     fillTank(customer, 10.111, 11);
     expect(customer.money).toBe(2888.78);
+    expect(customer.vehicle.fuelRemains).toBe(19);
   });
 
   it('should round the poured amount by discarding number to the tenth part', () => {
@@ -69,6 +71,7 @@ describe('fillTank', () => {
 
     fillTank(customer, 10, 10.17);
     expect(customer.money).toBe(2899);
+    expect(customer.vehicle.fuelRemains).toBe(18.1);
   });
 
   it('should always fill in only what the client can pay', () => {
@@ -111,5 +114,19 @@ describe('fillTank', () => {
     fillTank(customer, 10);
     expect(customer.money).toBe(0);
     expect(customer.vehicle.fuelRemains).toBe(20);
+  });
+
+  it('should not tank when customer can afford for less than 2 litres', () => {
+    const customer = {
+      money: 15,
+      vehicle: {
+        maxTankCapacity: 40,
+        fuelRemains: 10,
+      },
+    };
+
+    fillTank(customer, 10, 10);
+    expect(customer.money).toBe(15);
+    expect(customer.vehicle.fuelRemains).toBe(10);
   });
 });
